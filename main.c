@@ -21,20 +21,24 @@ int num_access_cycles = 0;
 int global_timestamp = 0;
 
 int retrieve_data(void *addr, char data_type) {
-    int value_returned = -1; /* accessed data */
+   int value_returned = -1; /* accessed data */
     int valid; 
   
     /* Invoke check_cache_data_hit() */
     valid = check_cache_data_hit(addr, data_type);
     printf("valid %d\n\n", valid);
 
-
-    
     /* In case of the cache miss event, access the main memory by invoking access_memory() */
+    if (valid == -1) {
+        access_memory(addr, data_type);
+    }
+    else {
+        value_returned = valid;
+    }
 
 
 
-    return value_returned;    
+    return value_returned;
 }
 
 int main(void) {
