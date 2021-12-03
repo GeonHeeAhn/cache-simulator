@@ -79,18 +79,89 @@ void print_cache_entries() {
     }
 }
 
+void decimal_to_binary(int decimal, int binary[]) {
+    int position = 0;
+    int temp;
+
+    while (1)
+    {
+        binary[position] = decimal % 2;    // 2로 나누었을 때 나머지를 배열에 저장
+        decimal = decimal / 2;             // 2로 나눈 몫을 저장
+
+        position++;    // 자릿수 변경
+
+        if (decimal == 0)    // 몫이 0이 되면 반복을 끝냄
+            break;
+    }
+
+    for (int i = 0; i < 5 / 2; i++) {
+        temp = binary[i];
+        binary[i] = binary[(5 - 1) - i];
+        binary[(5- 1) - i] = temp;
+    }
+}
+
+void tag_and_set(int tag[], int set[], int binary_block_address[]) {
+    for (int i = 0; i < sizeof(tag); i++) {
+        tag[i] = binary_block_address[i];
+    }
+
+    for (int j = 0; j < sizeof(set); j++) {
+        set[j] = binary_block_address[(sizeof(tag) + j)];
+    }
+
+}
+
+int binary_to_decimal(int binary[]) {
+    int decimal = 0;
+    int position = 0;
+    for (int i = sizeof(binary) / sizeof(int) - 1; i >= 0; i--)
+    {
+        if (binary[i] == 1)
+            decimal += 1 << position;
+
+        position++;
+    }
+
+    return decimal;
+}
+
 int check_cache_data_hit(void *addr, char type) {
+ /* Fill out here */
+    int byte_address = addr; //여기 unsigned long int로 해야할까?
+    int block_address;
+    int binary_block_addr[5] = { 0, };
+    int set_decimal;
+    int tag_decimal;
+   
+    //direct mapped cache
+    block_address = byte_address / 8;
+    decimal_to_binary(block_address, binary_block_addr);
 
-    /* Fill out here */
+    printf("binary_block_addr:\n");
+    for (int i = 0; i < 5; i++) {
+        printf("%d", binary_block_addr[i]);
+    }
+    printf("\n");
 
+    int direct_tag[3] = { 0 };
+    int direct_set[2] = { 0 };
 
+    tag_and_set(direct_tag, direct_set, binary_block_addr);
+    
+    set_decimal = binary_to_decimal(direct_set);
+    tag_decimal = binary_to_decimal(direct_tag);
 
+    cache_entry_t* pEntry = &cache_array[set_decimal][0]; //임시방편... 더 좋은걸 생각해보자
 
-
-
+    if (pEntry->valid == 0) {
+        return -1;
+    }
+    else {
+        return pEntry->data;
+    }
 
     /* Return the data */
-    return 0;    
 }
 
 int find_entry_index_in_set(int cache_index) {

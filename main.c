@@ -22,8 +22,11 @@ int global_timestamp = 0;
 
 int retrieve_data(void *addr, char data_type) {
     int value_returned = -1; /* accessed data */
-
+    int valid; 
+  
     /* Invoke check_cache_data_hit() */
+    valid = check_cache_data_hit(addr, data_type);
+    printf("valid %d\n\n", valid);
 
 
     
@@ -56,7 +59,7 @@ int main(void) {
         printf("test code %lu %c\n\n", access_addr, access_type);
         retreive_data(access_addr, access_type);
     }
-    
+
     ofp = fopen("access_output.txt", "w");
     if (ofp == NULL) {
         printf("Can't open output file\n");
