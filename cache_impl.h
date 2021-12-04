@@ -9,7 +9,7 @@
  *
  */
 
-/* DO NOT CHANGE THE FOLLOWING DEFINITIONS EXCEPT 'DEFAULT_CACHE_ASSOC */
+ /* DO NOT CHANGE THE FOLLOWING DEFINITIONS EXCEPT 'DEFAULT_CACHE_ASSOC */
 
 #ifndef _CACHE_IMPL_H_
 #define _CACHE_IMPL_H_
@@ -28,7 +28,7 @@ void init_memory_content();
 void init_cache_content();
 void print_cache_entries();
 int check_cache_data_hit(void* addr, char type);
-int access_memory(void *addr, char type);
+int access_memory(void* addr, char type);
 
 
 /* Cache Entry Structure */
